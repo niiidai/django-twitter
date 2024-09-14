@@ -65,4 +65,5 @@ else:
 "
 printf "$script" | python manage.py shell
 
+
 echo 'All Done!'
