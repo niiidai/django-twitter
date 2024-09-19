@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #third party
     'rest_framework',
+    # project apps
+    'accounts',
 ]
 
 REST_FRAMEWORK = {
@@ -87,7 +89,7 @@ DATABASES = {
         'HOST': '0.0.0.0',
         'PORT': '3306',
         'USER': 'root',
-        'PASSWORD': '1234', # 这⾥是⾃⼰下载mysql时候输⼊两次的那个密码
+        'PASSWORD': '1234', #same passwd as in provision.sh when mysql was installed
     }
 }
 
