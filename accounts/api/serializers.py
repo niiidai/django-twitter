@@ -17,11 +17,13 @@ class SignupSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'password')
 
     def validate(self, data):
-        if User.objects.filter(username=data['username'].lower()).exists():
+        data['username'] = data['username'].lower()
+        data['email'] = data['email'].lower()
+        if User.objects.filter(username=data['username']).exists():
             raise exceptions.ValidationError({
                 'username': 'This username has been occupied.'
             })
-        elif User.objects.filter(email=data['email'].lower()).exists():
+        elif User.objects.filter(email=data['email']).exists():
             raise exceptions.ValidationError({
                 'email': 'This email address has been occupied.'
             })

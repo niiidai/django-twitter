@@ -43,7 +43,7 @@ class AccountViewSet(viewsets.ViewSet):
             }, status=400)
 
         # username case insensitive
-        username = serializer.validated_data['username'].lower()
+        username = serializer.validated_data['username']
         password = serializer.validated_data['password']
         # in case username does not exit
         if not User.objects.filter(username=username).exists():
@@ -105,7 +105,10 @@ class AccountViewSet(viewsets.ViewSet):
         """
         check the login status of the current user
         """
-        data = {'has_logged_in': request.user.is_authenticated}
+        data = {
+            'has_logged_in': request.user.is_authenticated,
+            'ip': request.META['REMOTE_ADDR'],
+        }
         if request.user.is_authenticated:
             data['user'] = UserSerializer(request.user).data
         return Response(data)
