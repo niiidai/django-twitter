@@ -1,6 +1,5 @@
-from django.test import TestCase
+from testing.testcases import TestCase
 from rest_framework.test import APIClient
-from django.contrib.auth.models import User
 
 LOGIN_URL = '/api/accounts/login/'
 LOGOUT_URL = '/api/accounts/logout/'
@@ -8,20 +7,15 @@ SIGNUP_URL = '/api/accounts/signup/'
 LOGIN_STATUS_URL = '/api/accounts/login_status/'
 
 class AccountApiTests(TestCase):
+
     def setUp(self):
         # this function will be called when each test function is executed
         self.client = APIClient()
-        self.user = self.createUser(
+        self.user = self.create_user(
         username='admin',
         email='admin@test.com',
         password='correct password',
         )
-
-    def createUser(self, username, email, password):
-        # use User.objects.create_user() instead of User.objects.create()
-        # as password needs to be encrypted,
-        # and username and email needs to be normalized
-        return User.objects.create_user(username, email, password)
 
     def test_login(self):
         # test function name needs to begin with ‘test_’ to be called.
