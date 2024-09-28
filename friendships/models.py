@@ -18,12 +18,13 @@ class Friendship(models.Model):
 
     class Meta:
         index_together = (
-            # get users I follow, ordered by created_at
+            # follower list, ordered by created_at
             ('from_user_id', 'created_at'),
-            # get my followers, ordered by created_at
+            # following list, ordered by created_at
             ('to_user_id', 'created_at'),
         )
         unique_together = (('from_user_id', 'to_user_id'),)
+        ordering = ('-created_at',)
 
     def __str__(self):
         return'{} followed {}'.format(self.from_user_id, self.to_user_id)

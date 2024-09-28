@@ -37,7 +37,7 @@ class TweetViewSet(viewsets.GenericViewSet,
 
     def create(self, request, *args, **kwargs):
         """
-        This create method need current user as tweet.user
+        This create method needs current user as tweet.user
         """
         serializer = TweetCreateSerializer(
             data=request.data,
