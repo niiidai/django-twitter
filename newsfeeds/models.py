@@ -12,7 +12,7 @@ class NewsFeed(models.Model):
     class Meta:
         index_together = (('user', 'created_at'),)
         unique_together = (('user', 'tweet'),)
-        ordering = ('created_at',)
+        ordering = ('-created_at',)
 
     def __str__(self):
         return f'{self.created_at} inbox of {self.user}: {self.tweet}'
