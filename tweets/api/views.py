@@ -31,7 +31,9 @@ class TweetViewSet(viewsets.GenericViewSet,
         # where user_id = xx
         # order by created_at DESC
         user_id = request.query_params['user_id']
-        tweets = Tweet.objects.filter(user_id=user_id).order_by('-created_at')
+        tweets = Tweet.objects.filter(user_id=user_id)\
+            .prefetch_related('user')\
+            .order_by('-created_at')
         serializer = TweetSerializer(tweets, many=True)
         # return response in JSON format (hash format)
         return Response({'tweets': serializer.data})

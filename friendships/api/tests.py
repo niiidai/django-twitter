@@ -53,6 +53,9 @@ class FriendshipApiTests(TestCase):
         response = self.user1_client.post(FOLLOW_URL.format(self.user2.id))
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Friendship.objects.count(), count + 1)
+        #follow user that does not exist
+        response = self.user2_client.post(FOLLOW_URL.format(0))
+        self.assertEqual(response.status_code, 404)
 
     def test_unfollow(self):
         url = UNFOLLOW_URL.format(self.user1.id)
