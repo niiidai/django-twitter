@@ -14,6 +14,8 @@ class FriendshipViewSet(viewsets.GenericViewSet):
     serializer_class = FriendshipCreateSerializer
     queryset = User.objects.all()
 
+    # We would like to use POST /api/friendships/1/follow
+    # to follow the user with user_id = 1.
     # detail = True will call get_object() first to check
     # if the queryset.filter(pk=x) object exists.
     @action(methods=['GET'], detail=True, permission_classes=[AllowAny])
