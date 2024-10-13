@@ -75,6 +75,7 @@ class CommentViewSet(viewsets.GenericViewSet):
             status=status.HTTP_200_OK,
         )
 
+    # DELETE
     def destroy(self, request, *args, **kwargs):
         comment = self.get_object()
         comment.delete()
