@@ -5,7 +5,10 @@ from comments.models import Comment
 from comments.api.serializers import (
     CommentSerializer,
     CommentCreateSerializer,
+    CommentUpdateSerializer,
 )
+from comments.api.permissions import IsObjectOwner
+
 
 class CommentViewSet(viewsets.GenericViewSet):
     """
@@ -25,6 +28,8 @@ class CommentViewSet(viewsets.GenericViewSet):
     def get_permissions(self):
         if self.action == 'create':
             return [IsAuthenticated()]
+        if self.action in ['update', 'destroy']:
+            return [IsAuthenticated(), IsObjectOwner()]
         return [AllowAny()]
 
     def create(self, request, *args, **kwargs):
@@ -48,3 +53,34 @@ class CommentViewSet(viewsets.GenericViewSet):
             status=status.HTTP_201_CREATED,
         )
 
+    def update(self, request, *args, **kwargs):
+        # get_object() is a function of Django Rest Framework.
+        # If the object is not found, DRF will automatically raise 404 error.
+        comment = self.get_object()
+        serializer = CommentUpdateSerializer(
+            instance=comment,
+            data=request.data,
+        )
+        if not serializer.is_valid():
+            raise Response({
+                'message': 'Please check input.',
+                'errors': serializer.errors,
+            }, status=status.HTTP_400_BAD_REQUEST)
+        # Here, save() will call the update method in serializer.
+        # save() will call create or update depending on
+        # whether the instance parameter is passed to serializer.
+        comment = serializer.save()
+        return Response(
+            CommentSerializer(comment).data,
+            status=status.HTTP_200_OK,
+        )
+
+    # DELETE
+    def destroy(self, request, *args, **kwargs):
+        comment = self.get_object()
+        comment.delete()
+        # In DRF, the default return status of destroy is
+        # status code = 204 no content.
+        # Here, we return success=True for the front end user
+        # and HTTP_200_OK is more appropriate.
+        return Response({'success': True}, status=status.HTTP_200_OK)
