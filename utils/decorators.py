@@ -29,7 +29,7 @@ def required_params(request_attr='query_params', params=None):
             if missing_params:
                 params_str = ','.join(missing_params)
                 return Response({
-                    'message': u'missing {} in request'.format(params_str),
+                    'message': 'missing {} in request'.format(params_str),
                     'success': False,
                 }, status=status.HTTP_400_BAD_REQUEST)
             # view_func (wrapped by @required_params) will be called after
