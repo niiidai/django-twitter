@@ -9,13 +9,8 @@ FOLLOW_URL = '/api/friendships/{}/follow/'
 class NewsFeedApiTests(TestCase):
 
     def setUp(self):
-        self.user1 = self.create_user('user1')
-        self.user1_client = APIClient()
-        self.user1_client.force_authenticate(self.user1)
-
-        self.user2 = self.create_user('user2')
-        self.user2_client = APIClient()
-        self.user2_client.force_authenticate(self.user2)
+        self.user1, self.user1_client = self.create_user_and_client('user1')
+        self.user2, self.user2_client = self.create_user_and_client('user2')
 
     def test_list(self):
         # need to log in
