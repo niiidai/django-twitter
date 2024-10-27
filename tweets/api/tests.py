@@ -10,15 +10,14 @@ TWEET_RETRIEVE_API = '/api/tweets/{}/'
 class TweetApiCase(TestCase):
 
     def setUp(self):
-        self.user1 = self.create_user('user1', 'user1@twitter.com')
+        self.user1, self.user1_client = self.create_user_and_client('user1')
+        self.user2, self.user2_client = self.create_user_and_client('user2')
+
         self.tweets1 = [
             self.create_tweet(self.user1)
             for i in range(3)
         ]
-        self.user1_client = APIClient()
-        self.user1_client.force_authenticate(self.user1)
 
-        self.user2 = self.create_user('user2', 'user2@twitter.com')
         self.tweets2 = [
             self.create_tweet(self.user2)
             for i in range(2)
