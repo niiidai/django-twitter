@@ -1,7 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.db import models
 
 
 class Like(models.Model):
@@ -22,7 +22,10 @@ class Like(models.Model):
         # different types of objects.
         unique_together = (('user', 'content_type', 'object_id'),)
         # This index_together will create index for all likes of a content_object.
-        index_together = (('content_type', 'object_id', 'created_at'),)
+        index_together = (
+            ('content_type', 'object_id', 'created_at'),
+            ('user', 'content_type', 'created_at'),
+        )
 
     def __str__(self):
         return '{} - {} liked {} {}'.format(
