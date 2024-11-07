@@ -1,14 +1,15 @@
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from comments.models import Comment
+from comments.api.permissions import IsObjectOwner
 from comments.api.serializers import (
     CommentSerializer,
     CommentCreateSerializer,
     CommentUpdateSerializer,
 )
-from comments.api.permissions import IsObjectOwner
+from comments.models import Comment
+from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
 from utils.decorators import required_params
+
 
 class CommentViewSet(viewsets.GenericViewSet):
     """
@@ -41,7 +42,11 @@ class CommentViewSet(viewsets.GenericViewSet):
             .order_by('created_at')
         #tweet_id = request.query_params['tweet_id']
         #comments = Comment.objects.filter(tweet_id=tweet_id)
-        serializer = CommentSerializer(comments, many=True)
+        serializer = CommentSerializer(
+            comments,
+            context={'request': request},
+            many=True
+        )
         return Response(
             {'comments': serializer.data},
             status=status.HTTP_200_OK,
@@ -64,7 +69,7 @@ class CommentViewSet(viewsets.GenericViewSet):
         # .save() will call the create method in serializer
         comment = serializer.save()
         return Response(
-            CommentSerializer(comment).data,
+            CommentSerializer(comment, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
         )
 
@@ -86,7 +91,7 @@ class CommentViewSet(viewsets.GenericViewSet):
         # whether the instance parameter is passed to serializer.
         comment = serializer.save()
         return Response(
-            CommentSerializer(comment).data,
+            CommentSerializer(comment, context={'request': request}).data,
             status=status.HTTP_200_OK,
         )
 
