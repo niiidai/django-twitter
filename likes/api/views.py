@@ -1,3 +1,4 @@
+from inbox.services import NotificationService
 from likes.api.serializers import(
     LikeSerializer,
     LikeCreateSerializer,
@@ -15,7 +16,7 @@ class LikeViewSet(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = LikeCreateSerializer
 
-    @required_params(request_attr='data', params=['content_type', 'object_id'])
+    @required_params(method='POST', params=['content_type', 'object_id'])
     def create(self, request, *args, **kwargs):
         serializer = LikeCreateSerializer(
             data=request.data,
@@ -26,14 +27,16 @@ class LikeViewSet(viewsets.GenericViewSet):
                 'message': 'Please check input.',
                 'errors': serializer.errors,
             }, status=status.HTTP_400_BAD_REQUEST)
-        instance = serializer.save()
+        instance, created = serializer.get_or_create()
+        if created:
+            NotificationService.send_like_notification(instance)
         return Response(
             LikeSerializer(instance).data,
             status=status.HTTP_201_CREATED,
         )
 
     @action(methods=['POST'], detail=False)
-    @required_params(request_attr='data', params=['content_type', 'object_id'])
+    @required_params(method='POST', params=['content_type', 'object_id'])
     def cancel(self, request, *args, **kwargs):
         serializer = LikeCancelSerializer(
             data=request.data,
