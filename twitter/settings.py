@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -144,6 +145,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Files uploaded by users will be stored in media/ when
+# the default 'django.core.files.storage.FileSystemStorage'
+# storage is selected.
+MEDIA_ROOT = 'media/'
+
+# Set which storage system will be used for uploading files
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+TESTING = ((" ".join(sys.argv)).find('manage.py test') != -1)
+if TESTING:
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+# Set the AWS Bucket name and region name when using s3boto3
+# to upload files
+AWS_STORAGE_BUCKET_NAME = 'django-twitter'
+AWS_S3_REGION_NAME = 'us-west-1'
+
+# AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY were stored in
+# local_setting.py.
 
 try:
     from .local_settings import *
