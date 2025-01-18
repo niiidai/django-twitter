@@ -159,7 +159,7 @@ if TESTING:
 
 # Set the AWS Bucket name and region name when using s3boto3
 # to upload files
-AWS_STORAGE_BUCKET_NAME = 'django-twitter'
+AWS_STORAGE_BUCKET_NAME = 'drf-twitter'
 AWS_S3_REGION_NAME = 'us-west-1'
 
 # AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY were stored in
